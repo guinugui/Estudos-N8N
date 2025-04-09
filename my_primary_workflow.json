@@ -1,0 +1,299 @@
+{
+  "name": "my primary workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Olá! 👋\nComo posso te ajudar hoje ?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        -40
+      ],
+      "id": "8b32f045-4c23-48eb-80d1-d75cee0acb0b",
+      "name": "When chat message received",
+      "webhookId": "b0f9c8ac-727f-485d-8a10-8d3463dd0fb3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9fbe7bae-63dc-46b2-9e98-8efe6b3e7da2",
+              "name": "idConversa",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "fb6b0192-2c31-4f65-bc83-893a159dde95",
+              "name": "Mensagem",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        40,
+        -40
+      ],
+      "id": "a93c5d1e-d71c-4c74-8249-95b5bd478c83",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1T5jY-oJyeQxrZOr1QKOTyWspdlNvT9cE39GCCbJL5JU",
+          "mode": "list",
+          "cachedResultName": "N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T5jY-oJyeQxrZOr1QKOTyWspdlNvT9cE39GCCbJL5JU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T5jY-oJyeQxrZOr1QKOTyWspdlNvT9cE39GCCbJL5JU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "idCorversa": "={{ $json.idConversa }}",
+            "Mensagem": "={{ $json.Mensagem }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "idCorversa",
+              "displayName": "idCorversa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        -40
+      ],
+      "id": "ea442b24-a202-4489-957f-620d72af8f7a",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjmQlXetCwyEMQMR",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Edit Fields').item.json.Mensagem }}",
+        "options": {
+          "systemMessage": "Você agora é DataBot, um assistente inteligente e simpático, especializado em suporte para comerciantes que utilizam o sistema SAP com ERP. Seu foco é ajudar usuários em rotinas comerciais e operacionais, como envio de ativos, disparo de mensagens ao cliente, ou acompanhamento de processos no sistema.\n\nSua linguagem deve ser:\n\nDidática e acolhedora 😊\n\nDividida em etapas sequenciais, como um passo a passo numerado ✅\n\nInterativa: ao fim de cada passo, pergunte se o usuário conseguiu completar aquela etapa antes de continuar 👉\n\nUtilize emojis para facilitar a compreensão visual\n\nSempre se mantenha claro, objetivo e sem jargões técnicos desnecessários 🧠\n\nExemplo de tom desejado:\n\n\"Passo 1️⃣: Acesse o módulo de CRM no SAP. Ele geralmente está no menu principal. Me avisa quando conseguir achar, tá bom? 😉\"\n\nSe o usuário perguntar:\n\n\"Como disparar uma mensagem para o cliente?\"\nVocê deve explicar o processo com clareza, em etapas, e perguntar se ele conseguiu realizar cada uma antes de seguir.\n\n\"Como envio um ativo para o cliente?\"\nOriente detalhadamente como localizar o ativo, anexar ou enviar via SAP, e verifique o entendimento a cada passo.\n\nSe algo estiver fora do seu escopo, diga de forma educada e sugira onde ele pode buscar ajuda."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        420,
+        -40
+      ],
+      "id": "946ef761-0352-4567-929e-12adcae01684",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        400,
+        180
+      ],
+      "id": "7a5f8b7e-54ed-4bcf-94fe-65063e06dca6",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "FeNsNCTzKj8nSzNa",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields').item.json.idConversa }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        520,
+        180
+      ],
+      "id": "38eaa366-896a-4800-b416-712aa635beb3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        640,
+        180
+      ],
+      "id": "9fdd3d7e-829c-4d33-b199-a16186620dc2",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        760,
+        180
+      ],
+      "id": "777ec8de-98f3-4bb2-ba8e-7bcf36b21f63",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -40
+      ],
+      "id": "6364811d-ee57-4e47-bafc-c7a362a18183",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fbf2b2e6-b85b-4308-b250-c55a6977cd94",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "132c858c7a2ec2f83b0679dfdebb5c444dc60b9c9c4ee160ae1e3b35891b0267"
+  },
+  "id": "GhTPxSrdJSRARkzq",
+  "tags": []
+}
