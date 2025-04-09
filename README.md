@@ -4,7 +4,7 @@
 
 ## 🔍 Visão Geral
 
-Este projeto tem como objetivo automatizar o fluxo de atendimento de mensagens recebidas via WhatsApp. A automação será composta por quatro etapas principais:
+Este projeto tem como objetivo gardar mensagens recebidas via WhatsApp.
 
 1. **Recebimento da mensagem via WhatsApp (gatilho de entrada)**  
 2. **Transformação dos dados recebidos (parser/cleaner)**  
