@@ -8,8 +8,7 @@ Este projeto tem como objetivo gardar mensagens recebidas via WhatsApp.
 
 1. **Recebimento da mensagem via WhatsApp (gatilho de entrada)**  
 2. **Transformação dos dados recebidos (parser/cleaner)**  
-3. **Registro dos dados no Google Sheets**  
-4. **Envio dos dados ao Agente de IA para geração de resposta automatizada**
+3. **Registro dos dados no Google Sheets** 
 
 ---
 
