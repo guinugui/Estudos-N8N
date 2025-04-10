@@ -1,0 +1,313 @@
+{
+  "name": "Case 4 - Agente de Email",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c2b95573-9046-4328-8be7-ebe97770c06c",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "erIbfRJ2bWeiklgw",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3f0e1d6a-2ee8-4c0e-b878-65b4a4ade09c",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a0e48ec3-2150-47e0-802c-93d402735c23",
+              "name": "From",
+              "value": "={{ $json.From }}",
+              "type": "string"
+            },
+            {
+              "id": "f156e92c-d0dd-4fc5-88cf-e9d252c68963",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "1462c4b6-d9ce-448a-b870-71c56bf85025",
+              "name": "snippet",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "c432cd97-c69a-4496-bf02-afed99a54010",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xp06cUXlZrKli0JDgP5scZc_VusHyixgXYrb1ZNlt8I",
+          "mode": "list",
+          "cachedResultName": "Planilha de responder email",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xp06cUXlZrKli0JDgP5scZc_VusHyixgXYrb1ZNlt8I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xp06cUXlZrKli0JDgP5scZc_VusHyixgXYrb1ZNlt8I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "dono_email": "={{ $json.From }}",
+            "conteudo_email": "={{ $json.Subject }}",
+            "trecho": "={{ $json.snippet }}",
+            "id_email": "={{ $json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "dono_email",
+              "displayName": "dono_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "conteudo_email",
+              "displayName": "conteudo_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_email",
+              "displayName": "id_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "trecho",
+              "displayName": "trecho",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        0
+      ],
+      "id": "1cfcdddb-c9bf-4c0e-8369-4260d789355c",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjmQlXetCwyEMQMR",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.trecho }}",
+        "options": {
+          "systemMessage": "Voçe é um assistente virtal, tudo que eles enviar tem que responder com o padrão de email mesmo \n\nDicas para responder um email \nSeja claro e conciso\nInclua a data de retorno\nInforme como o remetente pode obter assistência imediata\nAgradeça pela compreensão\nChame o interlocutor pelo nome\nEvite fazer acusações infundadas\nColoque-se à disposição do cliente para o caso de novas dúvidas\nRevise a linguagem e a gramática\n\nmas se pedir informações pessoais voce não deve passar de ninguem"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        660,
+        0
+      ],
+      "id": "d5c58e14-90f5-445a-9eec-a94d8642801b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        580,
+        260
+      ],
+      "id": "71cb39be-ce99-48b9-9b2b-b82d0efa7a5a",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "FeNsNCTzKj8nSzNa",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json.dono_email }}",
+        "subject": "={{ $('Google Sheets').item.json.conteudo_email }}",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1020,
+        0
+      ],
+      "id": "0ce63de3-cd11-4a6d-aec0-93394fac3555",
+      "name": "Gmail",
+      "webhookId": "64c22d2c-c781-4df6-938a-f2dd19395607",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "erIbfRJ2bWeiklgw",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.id_email }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        700,
+        260
+      ],
+      "id": "cdb5619a-6d85-4e40-8fea-4197d45ebfc2",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "be59ccd8-e7d6-4df4-8276-b4d8daffef72",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "132c858c7a2ec2f83b0679dfdebb5c444dc60b9c9c4ee160ae1e3b35891b0267"
+  },
+  "id": "bOlmBzkdMdM5LIKs",
+  "tags": []
+}
